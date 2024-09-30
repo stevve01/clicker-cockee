@@ -1,0 +1,140 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script type="text/javascript">
+        window.cookieconsent_options = {
+            "message": "Unsurprisingly, this website uses cookies for ads and traffic analysis.",
+            "dismiss": "Got it!",
+            "learnMore": "Learn more",
+            "link": "//orteil.dashnet.org/cookieconsentpolicy.html",
+            "target": "_blank",
+            "theme": "//orteil.dashnet.org/cookieconsent.css",
+            "domain": "dashnet.org"
+        };
+    </script>
+    
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/1.0.9/cookieconsent.min.js"></script>
+    
+    <title>Enhanced Cookie Clicker</title>
+    
+    <meta name="viewport" content="width=900, initial-scale=1">
+    <link rel="shortcut icon" href="img/favicon.ico" />
+    <link href='https://fonts.googleapis.com/css?family=Merriweather:900&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+    
+    <style>
+        body {
+            font-family: 'Merriweather', serif;
+            background-color: #f4f4f4;
+            color: #333;
+            text-align: center;
+        }
+        #bigCookie {
+            cursor: pointer;
+            width: 200px;
+            height: 200px;
+            background: url('img/cookie.png') no-repeat center center;
+            background-size: contain;
+        }
+        #upgrades, #achievements {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .upgrade, .achievement {
+            border: 1px solid #ccc;
+            margin: 10px;
+            padding: 10px;
+            border-radius: 5px;
+            width: 150px;
+            cursor: pointer;
+        }
+        #achievements {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+<div id="wrapper">
+
+    <h1>Enhanced Cookie Clicker</h1>
+    
+    <div id="cookies" class="title">Cookies: <span id="cookieCount">0</span></div>
+    
+    <div id="bigCookie" onclick="clickCookie()"></div>
+    
+    <div id="upgrades">
+        <div class="upgrade" onclick="buyUpgrade('cursor')">Upgrade: Cursor (+1 cookie/second) - 50 Cookies</div>
+        <div class="upgrade" onclick="buyUpgrade('grandma')">Upgrade: Grandma (+5 cookies/second) - 500 Cookies</div>
+    </div>
+
+    <div id="achievements">
+        <h2>Achievements</h2>
+        <div id="achievement1" class="achievement">Clicked 10 Cookies</div>
+        <div id="achievement2" class="achievement">Clicked 100 Cookies</div>
+    </div>
+
+    <button onclick="resetGame()">Reset Game</button>
+
+</div>
+
+<script>
+    let cookies = 0;
+    let cookiesPerSecond = 0;
+    let upgrades = {
+        cursor: { cost: 50, cps: 1, count: 0 },
+        grandma: { cost: 500, cps: 5, count: 0 }
+    };
+    
+    function clickCookie() {
+        cookies++;
+        document.getElementById('cookieCount').innerText = cookies;
+        checkAchievements();
+        updateCookiesPerSecond();
+    }
+    
+    function buyUpgrade(upgrade) {
+        if (cookies >= upgrades[upgrade].cost) {
+            cookies -= upgrades[upgrade].cost;
+            upgrades[upgrade].count++;
+            upgrades[upgrade].cost = Math.floor(upgrades[upgrade].cost * 1.5); // Increase cost
+            document.getElementById('cookieCount').innerText = cookies;
+            updateCookiesPerSecond();
+        }
+    }
+    
+    function updateCookiesPerSecond() {
+        cookiesPerSecond = 0;
+        for (let upgrade in upgrades) {
+            cookiesPerSecond += upgrades[upgrade].count * upgrades[upgrade].cps;
+        }
+        setInterval(() => {
+            cookies += cookiesPerSecond;
+            document.getElementById('cookieCount').innerText = cookies;
+            checkAchievements();
+        }, 1000);
+    }
+
+    function checkAchievements() {
+        if (cookies === 10) {
+            document.getElementById('achievement1').style.display = 'block';
+        }
+        if (cookies === 100) {
+            document.getElementById('achievement2').style.display = 'block';
+        }
+    }
+
+    function resetGame() {
+        cookies = 0;
+        cookiesPerSecond = 0;
+        upgrades.cursor.count = 0;
+        upgrades.grandma.count = 0;
+        upgrades.cursor.cost = 50;
+        upgrades.grandma.cost = 500;
+        document.getElementById('cookieCount').innerText = cookies;
+        document.getElementById('achievements').style.display = 'none';
+    }
+</script>
+
+</body>
+</html>
